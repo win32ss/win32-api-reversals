@@ -36,7 +36,7 @@ BOOL WINAPI SetProcessDEPPolicy(DWORD dwFlags)
     }
     dwFlags = 2; // Set DEP to be disabled for the process
   }
-  Status = NtSetInformationProcess((HANDLE)-1, ProcessExecuteFlags, (PVOID)&dwFlags,(ULONG) 4);
+  Status = NtSetInformationProcess((HANDLE)-1, ProcessExecuteFlags, (PVOID)&dwFlags,(ULONG) 4); //class 0x22
   if ( Status < 0 )
   {
     BaseSetLastNTError(Status);
