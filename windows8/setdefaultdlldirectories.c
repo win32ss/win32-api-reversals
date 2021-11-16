@@ -20,7 +20,7 @@ BOOL WINAPI SetDefaultDllDirectories(DWORD DirectoryFlags)
     if ( (DirectoryFlags & LOAD_LIBRARY_SEARCH_APPLICATION_DIR) != 0
       && (DirectoryFlags & LOAD_LIBRARY_SEARCH_USER_DIRS) != 0
       && (DirectoryFlags & LOAD_LIBRARY_SEARCH_SYSTEM32) != 0
-      && (DirectoryFlags & 0x100) == 0 )  */ This value is undocumented. But upon evaluation of LoadLibraryExW, it seems to be
+      && (DirectoryFlags & 0x100) == 0 )  /* This value is undocumented. But upon evaluation of LoadLibraryExW, it seems to be
                                              a secondary method of enforcing the flag LOAD_WITH_ALTERED_SEARCH_PATH if 
                                              it is not set in LoadLibraryExW. */
     {
