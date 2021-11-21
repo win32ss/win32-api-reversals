@@ -10,7 +10,7 @@ BOOL WINAPI QueryWorkingSetEx(HANDLE hProcess, PVOID pv, DWORD cb)
 {
   NTSTATUS Status;
 
-  Status = NtQueryVirtualMemory(hProcess, NULL, MemoryWorkingSetExList, pv, cb, NULL); // This class seems to have been                                                                                        // introduced with XP/2003, 0x4.
+  Status = NtQueryVirtualMemory(hProcess, NULL, MemoryWorkingSetExList, pv, cb, NULL); // This class seems to have been introduced with XP/2003, 0x4.
   if ( Status >= 0 )
     return TRUE;
   SetLastError(RtlNtStatusToDosError(Status)); 
