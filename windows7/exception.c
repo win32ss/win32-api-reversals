@@ -35,7 +35,7 @@ void WINAPI RaiseFailFastException(PEXCEPTION_RECORD pExceptionRecord, PCONTEXT 
     RtlCaptureContext(&ContextRecord);
   }                                                                                                                             
   if ( SignalStartWerSvc() < STATUS_SUCCESS || (Status = WaitForWerSvc(), Status < STATUS_SUCCESS) || Status == STATUS_TIMEOUT /*|| 0x7FFE02F0 & 1) == 0*/ || RtlReportException(NULL, NULL, 0x100) == STATUS_NOT_SUPPORTED)
-  {                                                                                                                             // ^ Not exactly sure how to point to that area, 
+  {                                                                                                                             // ^ Not exactly sure how to point to SharedUserData, 
     if ( (dwFlags & 2) == 0 )                                                                                                   // but if that is true, exception handling is basically turned off.
       NtRaiseHardError(p_ExceptionRecord->ExceptionCode | 0x10000000, 0, 0, 0, 1, Response);                                    // The RtlReportException() call does the same thing, and will return either that or STATUS_INVALID_PARAMETER.
     TerminateProcess((HANDLE)-1, p_ExceptionRecord->ExceptionCode);
