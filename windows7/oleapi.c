@@ -3,7 +3,7 @@
 #include <winternl.h>
 
 
-BOOLEAN g_cMTAInits;
+BOOLEAN g_cMTAInits;  // Global variables within ole32 itself
 DWORD gdwMainThreadId;
 
 HRESULT WINAPI CoGetApartmentType(APTTYPE *pAptType, APTTYPEQUALIFIER *pAptQualifier)
