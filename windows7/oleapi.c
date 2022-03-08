@@ -6,11 +6,6 @@
 BOOLEAN g_cMTAInits;
 DWORD gdwMainThreadId;
 
-int __stdcall DllMain()
-{
-	return 0;
-}
-
 HRESULT WINAPI CoGetApartmentType(APTTYPE *pAptType, APTTYPEQUALIFIER *pAptQualifier)
 /* 
     win32 - March 7 2021
