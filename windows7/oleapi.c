@@ -1,7 +1,4 @@
 
-#include <windows.h>
-#include <winternl.h>
-
 
 BOOLEAN g_cMTAInits;  // Global variables within ole32 itself
 DWORD gdwMainThreadId;
