@@ -46,7 +46,9 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 		if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) 
 		{
 		RtlFreeHeap(NtCurrentTeb()->ProcessEnvironmentBlock->ProcessHeap, 0, BufferClassic);
+
 		BufferClassic = (PSYSTEM_LOGICAL_PROCESSOR_INFORMATION)RtlAllocateHeap(NtCurrentTeb()->ProcessEnvironmentBlock->ProcessHeap, 0, ReturnedLengthClassic);
+
 		}
 		else
 		 return FALSE; // a lost cause; the first error is the only anticipated error. ERROR_NOACCESS is also possible, but shouldn't based on the way I've set it up.
@@ -66,6 +68,8 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 	RequiredLength_All = 0;
 	RequiredLength = 0;
 	NewOffset = 0;
+
+	
  
 	while (Offset + sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION) <= ReturnedLengthClassic)
 	{
@@ -79,12 +83,12 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 				 Temp.Relationship = RelationNumaNode;
 				 #ifdef _X86_
 				 Temp.Size = 44;
-				 RequiredLength = 44;
-				 RequiredLength_All += 44;			 
+				 RequiredLength = 76;
+				 RequiredLength_All += 76;			 
 			     #else
 				 Temp.Size = 48;
-				 RequiredLength = 48;
-				 RequiredLength_All += 48;
+				 RequiredLength = 80;
+				 RequiredLength_All += 80;
 				 #endif
 				 Temp.NumaNode.NodeNumber = Ptr->NumaNode.NodeNumber;
 				 Temp.NumaNode.GroupMask.Mask = (KAFFINITY) ActiveProcessorMask;
@@ -106,12 +110,12 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 				 Temp.Relationship = RelationProcessorPackage;	
 				 #ifdef _X86_
 				 Temp.Size = 44;
-				 RequiredLength = 44;
-				 RequiredLength_All += 44;			 
+				 RequiredLength = 76;
+				 RequiredLength_All += 76;			 
 			     #else
 				 Temp.Size = 48;
-				 RequiredLength = 48;
-				 RequiredLength_All += 48;
+				 RequiredLength = 80;
+				 RequiredLength_All += 80;
 				 #endif
 				 Temp.Processor.Flags = Ptr->ProcessorCore.Flags;
 				 Temp.Processor.EfficiencyClass = 0;
@@ -131,13 +135,13 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 				 Temp.Relationship = RelationCache;
 				 Temp.Cache.Level = Ptr->Cache.Level;
 				 #ifdef _X86_
-				 Temp.Size = 52;
-				 RequiredLength = 52;
-				 RequiredLength_All += 52;		
+				 Temp.Size = 52; //52
+				 RequiredLength = 76;
+				 RequiredLength_All += 76;		
 				 #else
-				 Temp.Size = 56;
-				 RequiredLength = 56;
-				 RequiredLength_All += 56;		
+				 Temp.Size = 56; 
+				 RequiredLength = 80;
+				 RequiredLength_All += 80;		
                  #endif				 
 				 Temp.Cache.Associativity = Ptr->Cache.Associativity;
 				 Temp.Cache.LineSize = Ptr->Cache.LineSize;
@@ -164,7 +168,7 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 		NewBuffer++;
 		Ptr++;
 	}
-	
+	RtlFreeHeap(NtCurrentTeb()->ProcessEnvironmentBlock->ProcessHeap, 0, BufferClassic);
 	if(RelationshipType == RelationGroup || RelationshipType == RelationAll)
 	{
 		Temp.Relationship = RelationGroup;
@@ -187,14 +191,16 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 	    else
 		*NewBuffer = Temp;
 	}
-      RtlFreeHeap(NtCurrentTeb()->ProcessEnvironmentBlock->ProcessHeap, 0, BufferClassic);
+
+     
+    
 	  *ReturnedLength = RequiredLength_All;
 	   if(BufferTooSmall)
 	   {
 		   RtlSetLastWin32Error(ERROR_INSUFFICIENT_BUFFER);
 		   return FALSE;
 	   }
-       
+
 	   return TRUE;
 	   
 
