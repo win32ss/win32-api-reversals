@@ -2,15 +2,16 @@ BOOL GetProcessGroupAffinity(HANDLE hProcess, PUSHORT GroupCount, PUSHORT GroupA
 // Technically, all CPUs before Windows 7 were in group 0, so the function implementations are changed to reflect this reality.
 {
    _PROCESS_INFORMATION ProcessInfo;
+   NTSTATUS Status;
    if(!GroupCount)
    {
      SetLastError(ERROR_INSUFFICIENT_BUFFER);
 	 return FALSE;
    }
    
-   ProcessInfo = NtQueryInformationProcess(hProcess, ProcessBasicInformation, &ProcessInfo, sizeof(_PROCESS_INFORMATION), NULL);
+   Status = NtQueryInformationProcess(hProcess, ProcessBasicInformation, &ProcessInfo, sizeof(_PROCESS_INFORMATION), NULL);
    // Like GetProcessId(hProcess) but with fewer steps
-   if(ProcessInfo < 0) 
+   if(Status < 0) 
    {
 	 BaseSetLastNTError(ProcessInfo);
      return FALSE;
