@@ -3,6 +3,7 @@ BOOL GetProcessGroupAffinity(HANDLE hProcess, PUSHORT GroupCount, PUSHORT GroupA
 {
    _PROCESS_INFORMATION ProcessInfo;
    NTSTATUS Status;
+   *GroupCount = 1;
    if(!GroupCount)
    {
      SetLastError(ERROR_INSUFFICIENT_BUFFER);
@@ -16,8 +17,6 @@ BOOL GetProcessGroupAffinity(HANDLE hProcess, PUSHORT GroupCount, PUSHORT GroupA
 	 BaseSetLastNTError(ProcessInfo);
      return FALSE;
    }
-	 
-   *GroupCount = 1;
    
    GroupArray[0] = 1;
    
