@@ -14,7 +14,7 @@ BOOL GetProcessGroupAffinity(HANDLE hProcess, PUSHORT GroupCount, PUSHORT GroupA
    // Like GetProcessId(hProcess) but with fewer steps
    if(Status < 0) 
    {
-	 BaseSetLastNTError(ProcessInfo);
+	 BaseSetLastNTError(Status);
      return FALSE;
    }
    
