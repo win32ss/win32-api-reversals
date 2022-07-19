@@ -1,4 +1,4 @@
-BOOL GetNumaProcesorNodeEx(PPROCESSOR_NUMBER Processor, PUSHORT NodeNumber)
+BOOL WINAPI GetNumaProcesorNodeEx(PPROCESSOR_NUMBER Processor, PUSHORT NodeNumber)
 {
   if(!Processor)
   {
@@ -8,7 +8,7 @@ BOOL GetNumaProcesorNodeEx(PPROCESSOR_NUMBER Processor, PUSHORT NodeNumber)
   return GetNumaProcessorNode(Processor->Number, (PUCHAR)NodeNumber);
 }
 
-BOOL GetNumaNodeProcessorMaskEx(UCHAR Node, PGROUP_AFFINITY ProcessorMask)
+BOOL WINAPI GetNumaNodeProcessorMaskEx(UCHAR Node, PGROUP_AFFINITY ProcessorMask)
 {
    if(!ProcessorMask)
    {
