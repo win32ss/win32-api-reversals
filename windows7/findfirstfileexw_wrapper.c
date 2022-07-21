@@ -14,6 +14,12 @@ FindExInfoStandard, but with the short file name removed.
 */
 {
    HANDLE SearchHandle;
+	
+	if((dwAdditionalFlags & 0xFFFFFFF8) != 0 || fInfoLevelId > FindExInfoBasic)
+	{
+		 RtlSetLastWin32Error(ERROR_INVALID_PARAMETER);
+                 return (HANDLE) -1;
+	}
 
 	if(dwAdditionalFlags & FIND_FIRST_EX_CASE_SENSITIVE)
 		dwAdditionalFlags = FIND_FIRST_EX_CASE_SENSITIVE;
