@@ -8,6 +8,8 @@ typedef struct _MTA_USAGE_INCREMENTOR
 DWORD MTAThreadToRemove = 0;
 
 void CreateMTAUsageThread()
+// Suggestion to self: implement mutex object and use WaitForSingleObject instead.
+// But this does not seem necessary at this time.
 {
 	DWORD Tid;
 	CoInitializeEx(NULL, 0);
