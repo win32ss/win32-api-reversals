@@ -5,10 +5,16 @@ typedef struct _MTA_USAGE_INCREMENTOR
 }MTA_USAGE_INCREMENTOR, *PMTA_USAGE_INCREMENTOR; // This struct came from the public symbol for combase.
 // Very little information or none at all is stripped from the symbol, including TEB data.
 
+DWORD MTAThreadToRemove = 0;
+
 void CreateMTAUsageThread()
 {
+	DWORD Tid;
 	CoInitializeEx(NULL, 0);
-	SuspendThread(GetCurrentThread()); // To replace: the suspended thread is undesireable in various contexts
+	Tid = GetCurrentThreadId();
+	while(MTAThreadToRemove != Tid)
+		Sleep(1); // Sleep(0) is equivalent to taking your CPU hostage when it is unnecessary
+    MTAThreadToRemove = 0;
 	CoUninitialize();
 }
 
@@ -34,17 +40,14 @@ HRESULT WINAPI CoIncrementMTAUsage(CO_MTA_USAGE_COOKIE *pCookie)
 	return S_OK;
 }
 
-HRESULT WINAPI CoDecrementMTAUsage(CO_MTA_USAGE_COOKIE *pCookie)
+HRESULT WINAPI CoDecrementMTAUsageAlt(CO_MTA_USAGE_COOKIE *pCookie)
 {
-	HRESULT Result;
+	PMTA_USAGE_INCREMENTOR MTAIncrementor;
 	if(pCookie)
 	{
-	PMTA_USAGE_INCREMENTOR MTAIncrementor = *pCookie;
+	MTAIncrementor = *pCookie;
+	MTAThreadToRemove = MTAIncrementor->dwThreadId;
 
-	Result = ResumeThread(OpenThread(THREAD_SUSPEND_RESUME, FALSE, MTAIncrementor->dwThreadId));
-
-	if(Result == -1)
-		return E_FAIL;
 	CoTaskMemFree(*pCookie);
 	return S_OK;
 	}
