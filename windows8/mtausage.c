@@ -8,7 +8,7 @@ typedef struct _MTA_USAGE_INCREMENTOR
 void CreateMTAUsageThread()
 {
 	CoInitializeEx(NULL, 0);
-	SuspendThread(GetCurrentThread());
+	SuspendThread(GetCurrentThread()); // To replace: the suspended thread is undesireable in various contexts
 	CoUninitialize();
 }
 
