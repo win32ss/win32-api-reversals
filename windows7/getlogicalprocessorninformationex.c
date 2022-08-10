@@ -35,7 +35,7 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 	}
     if(Buffer == NULL)
 	{
-		RtlSetLastWin32Error(ERROR_NOACCESS);
+		RtlSetLastWin32Error(ERROR_INSUFFICIENT_BUFFER);
 		return FALSE;
 	}
 	
