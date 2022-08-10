@@ -35,8 +35,7 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 	}
     if(Buffer == NULL)
 	{
-		RtlSetLastWin32Error(ERROR_INSUFFICIENT_BUFFER);
-		return FALSE;
+		BufferTooSmall = TRUE;
 	}
 	
     BufferClassic = (PSYSTEM_LOGICAL_PROCESSOR_INFORMATION)RtlAllocateHeap(NtCurrentTeb()->ProcessEnvironmentBlock->ProcessHeap, 0, sizeof(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION));
@@ -82,11 +81,11 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 				 StructisCopied = TRUE;
 				 Temp.Relationship = RelationNumaNode;
 				 #ifdef _X86_
-				 Temp.Size = 44;
+				 Temp.Size = 76;
 				 RequiredLength = 76;
 				 RequiredLength_All += 76;			 
 			     #else
-				 Temp.Size = 48;
+				 Temp.Size = 80;
 				 RequiredLength = 80;
 				 RequiredLength_All += 80;
 				 #endif
@@ -109,11 +108,11 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 			     else
 				 Temp.Relationship = RelationProcessorPackage;	
 				 #ifdef _X86_
-				 Temp.Size = 44;
+				 Temp.Size = 76;
 				 RequiredLength = 76;
 				 RequiredLength_All += 76;			 
 			     #else
-				 Temp.Size = 48;
+				 Temp.Size = 80;
 				 RequiredLength = 80;
 				 RequiredLength_All += 80;
 				 #endif
@@ -135,11 +134,11 @@ BOOL GetLogicalProcessorInformationEx(LOGICAL_PROCESSOR_RELATIONSHIP Relationshi
 				 Temp.Relationship = RelationCache;
 				 Temp.Cache.Level = Ptr->Cache.Level;
 				 #ifdef _X86_
-				 Temp.Size = 52; //52
+				 Temp.Size = 76; //52
 				 RequiredLength = 76;
 				 RequiredLength_All += 76;		
 				 #else
-				 Temp.Size = 56; 
+				 Temp.Size = 80; 
 				 RequiredLength = 80;
 				 RequiredLength_All += 80;		
                  #endif				 
