@@ -130,3 +130,50 @@ BuildLinkedList:
   *ppVidSchSyncObject = vsoca;
   return STATUS_SUCCESS;	
 }
+
+BOOLEAN VIDSCHAPI VidSchIsSyncObjectSignaled(VIDSCH_SYNC_OBJECT_CROSS_ADAPTER *pVidSchSyncObject) // VIDSCH_SYNC_OBJECT is also accepted
+{
+	BOOLEAN IsSignaled; 
+	PKLOCK_QUEUE_HANDLE LockHandle;
+	PVOID QueuedOwner;
+	ULONG64 CurrentFenceValue;
+	
+	if(pVidSchSyncObject)
+	{
+		KeAcquireInStackQueuedSpinLock(&pVidSchSyncObject->pVidSchGlobal->SchedulerSpinLock, LockHandle);
+		IsSignaled = TRUE;
+		if(!pVidSchSyncObject->CrossAdapter)
+		{
+			QueuedFenceValue = pVidSchSyncObject->MutexData.QueuedFenceValue;
+			CurrentFenceValue = pVidSchSyncObject->FenceData.CurrentFenceValue;
+		}
+		else
+		{
+			QueuedFenceValue = pVidSchSyncObject->pCrossAdapterSyncObjectInfo->CrossAdapterQueuedFenceValue;
+			CurrentFenceValue = pVidSchSyncObject->pCrossAdapterSyncObjectInfo->CrossAdapterCurrentFenceValue;
+		}
+		if(pVidSchSyncObject->Type != FenceObject || QueuedFenceValue > CurrentFenceValue)
+		{
+			IsSignaled = FALSE;
+		}
+		
+		KeReleaseInStackQueuedSpinLock(LockHandle);
+		return IsSignaled;
+		
+	}
+	else
+		return FALSE;
+}
+
+NTSTATUS VidSchDestroySyncObject(VIDSCH_SYNC_OBJECT *pVidSchSyncObject)
+{
+	if(pVidSchSyncObject)
+	{
+		if(pVidSchSyncObject->Reference > 1)
+			VidSchTimeoutSyncObject(pVidSchSyncObject);
+		VidSchiReleaseSyncObjectReference(pVidSchSyncObject);
+		return STATUS_SUCCESS;
+	}
+	else
+		return STATUS_INVALID_PARAMETER;
+}
