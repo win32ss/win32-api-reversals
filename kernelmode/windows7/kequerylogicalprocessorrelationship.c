@@ -66,6 +66,9 @@ NTSTATUS NTAPI KeQueryLogicalProcessorRelationshipNew(PPROCESSOR_NUMBER Processo
    CACHE_DESCRIPTOR* CPUCache;
    CHAR CacheCount;
    KAFFINITY ProcessorPackageAffinity;
+	
+   if(!Length)
+	 return STATUS_INVALID_PARAMETER; // Turns out the NVIDIA drivers can call this function with a NULL pointer for Length
 
    if(ProcessorNumber)
    {
@@ -99,7 +102,7 @@ NTSTATUS NTAPI KeQueryLogicalProcessorRelationshipNew(PPROCESSOR_NUMBER Processo
 	
 	//  RequiredLength = 4*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX) + KiProcessorBlock[ProcessorNumber]->CacheCount*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX);
 	  
-	  if(RequiredLength < Length)
+	  if(RequiredLength < *Length)
 	  {
 		  *Length = RequiredLength;
 		  return STATUS_INFO_LENGTH_MISMATCH;	  
@@ -135,7 +138,7 @@ NTSTATUS NTAPI KeQueryLogicalProcessorRelationshipNew(PPROCESSOR_NUMBER Processo
 	//                   KeNumberNodes*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX) + KiProcessorBlock[ProcessorNumber]->CacheCount*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX)
 	//				   + sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX);
 	  
-	  if(RequiredLength < Length)
+	  if(RequiredLength < *Length)
 	  {
 		  *Length = RequiredLength;
 		  return STATUS_INFO_LENGTH_MISMATCH;	  
