@@ -68,7 +68,7 @@ NTSTATUS NTAPI KeQueryLogicalProcessorRelationshipNew(PPROCESSOR_NUMBER Processo
    KAFFINITY ProcessorPackageAffinity;
 	
    if(!Length)
-	 return STATUS_INVALID_PARAMETER; // Turns out the NVIDIA drivers can call this function with a NULL pointer for Length
+	 return STATUS_INVALID_PARAMETER;
 
    if(ProcessorNumber)
    {
@@ -140,6 +140,9 @@ NTSTATUS NTAPI KeQueryLogicalProcessorRelationshipNew(PPROCESSOR_NUMBER Processo
 	  
 	  *Length = RequiredLength;
   }
+
+  if(!RequiredLength)
+	  return STATUS_SUCCESS; // Hypervisors seem to not expose cache information to guests, and perhaps that is true for some other categories.
   
   ProcessorMask = KeQueryActiveProcessors();
   
