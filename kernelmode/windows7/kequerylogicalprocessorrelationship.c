@@ -99,8 +99,6 @@ NTSTATUS NTAPI KeQueryLogicalProcessorRelationshipNew(PPROCESSOR_NUMBER Processo
 		RequiredLength += sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX);  
 	  if(RelationshipType == RelationAll || RelationshipType == RelationCache)
 		RequiredLength += CacheCount*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX);
-	
-	//  RequiredLength = 4*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX) + KiProcessorBlock[ProcessorNumber]->CacheCount*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX);
 	  
 	  if(RequiredLength > *Length)
 	  {
@@ -133,10 +131,6 @@ NTSTATUS NTAPI KeQueryLogicalProcessorRelationshipNew(PPROCESSOR_NUMBER Processo
 		RequiredLength += sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX);  
 	  if(RelationshipType == RelationAll || RelationshipType == RelationCache)
 		RequiredLength += CacheCount*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX); 
-	
-	//  RequiredLength = KeNumberProcessors*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX) + NumberOfPackages*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX) +
-	//                   KeNumberNodes*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX) + KiProcessorBlock[ProcessorNumber]->CacheCount*sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX)
-	//				   + sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX);
 	  
 	  if(RequiredLength > *Length)
 	  {
