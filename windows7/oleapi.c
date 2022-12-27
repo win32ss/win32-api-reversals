@@ -11,7 +11,7 @@ HRESULT WINAPI CoGetApartmentType(APTTYPE *pAptType, APTTYPEQUALIFIER *pAptQuali
 {
   HRESULT Status; 
   BOOLEAN MTAInit; 
-  DWORD *ReservedForOle; 
+  SOleTlsData* ReservedForOle; 
   DWORD CurrentThreadId; 
   DWORD OleFlags; 
   APTTYPE AptTypeTemp; 
@@ -25,12 +25,12 @@ HRESULT WINAPI CoGetApartmentType(APTTYPE *pAptType, APTTYPEQUALIFIER *pAptQuali
   *pAptQualifier = APTTYPEQUALIFIER_NONE;
   MTAInit = FALSE;
   CurrentThreadInfo = NtCurrentTeb();
-  ReservedForOle = CurrentThreadInfo->ReservedForOle;
+  ReservedForOle = (SOleTlsData*) CurrentThreadInfo->ReservedForOle;
   if ( g_cMTAInits )
     MTAInit = TRUE;
   // The following is a GetCurrentThreadId() replacement.
   // NtCurrentTeb()->UniqueThread.ClientId or NtCurrentTeb() + 48h (AMD64) or NtCurrentTeb() + 24h (X86)
-  CurrentThreadId = (DWORD)CurrentThreadInfo->Reserved1[9];
+  CurrentThreadId = (DWORD)CurrentThreadInfo->UniqueThread.ClientId;
 
   if ( !ReservedForOle )
   {
@@ -38,7 +38,7 @@ HRESULT WINAPI CoGetApartmentType(APTTYPE *pAptType, APTTYPEQUALIFIER *pAptQuali
       goto ImplicitMTA;
     return CO_E_NOTINITIALIZED;
   }
-  OleFlags = ReservedForOle[5];
+  OleFlags = ReservedForOle->dwFlags;
   if ( (OleFlags & 0x800) == 0 )
   {
     if ( (OleFlags & 0x80) != 0 )
