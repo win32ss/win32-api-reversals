@@ -163,7 +163,7 @@ NTSTATUS NTAPI KeQueryLogicalProcessorRelationshipNew(PPROCESSOR_NUMBER Processo
 	  }
      if(RelationshipType == RelationAll || RelationshipType == RelationProcessorCore)
 	  {
-		  Iterator->Relationship = RelationProcessorPackage;
+		  Iterator->Relationship = RelationProcessorCore;
 		  Iterator->Size = sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX);
 		  Iterator->Processor.Flags = KiProcessorBlock[ProcessorNumber->Number].LogicalProcessorsPerCore > 1;
 		  Iterator->Processor.EfficiencyClass = 0;
@@ -231,7 +231,7 @@ NTSTATUS NTAPI KeQueryLogicalProcessorRelationshipNew(PPROCESSOR_NUMBER Processo
 	  {
 		  for(i = 0; i < KeNumberProcessors; i++)
 		  {
-		  Iterator->Relationship = RelationProcessorPackage;
+		  Iterator->Relationship = RelationProcessorCore;
 		  Iterator->Size = sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX);
 		  Iterator->Processor.Flags = KiProcessorBlock[0].LogicalProcessorsPerCore > 1;
 		  Iterator->Processor.EfficiencyClass = 0;
